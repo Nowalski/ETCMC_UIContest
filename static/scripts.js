@@ -540,7 +540,7 @@ helpBtn.addEventListener("click", () => {
 
 document.getElementById('node-boost-btn').addEventListener('click', function() {
     const backgroundColor = getBackgroundColor();
-
+    stopNode(backgroundColor);
     Swal.fire({
         title: 'Running NodeBoost',
         text: 'Please wait...',
@@ -623,4 +623,78 @@ function toggleDarkMode() {
 }
 
 
+document.getElementById("delete-chain-data-btn").addEventListener("click", function() {
+    Swal.fire({
+        title: 'Delete Chain Data',
+        text: 'Are you sure you want to delete the chain data?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        background: getBackgroundColor(),
+        customClass: {
+            content: getBackgroundColor() === '#333' ? 'alert-text-white' : '',
+            title: getBackgroundColor() === '#333' ? 'red-title' : '' 
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteChainData();
+        }
+    });
+});
 
+function deleteChainData() {
+    // First stop the node
+    stopNode(getBackgroundColor());
+
+    // Wait for a brief moment before proceeding with deleting chain data
+    setTimeout(() => {
+        fetch('/delete-chain-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to delete chain data');
+            }
+        })
+        .then(data => {
+            Swal.fire({
+                title: 'Deleted!',
+                text: 'Chain data has been deleted successfully.',
+                icon: 'success',
+                background: getBackgroundColor(),
+                customClass: {
+                    content: getBackgroundColor() === '#333' ? 'alert-text-white' : '',
+                    title: getBackgroundColor() === '#333' ? 'red-title' : '' 
+                },
+                timer: 3000, // Adjust the time (in milliseconds) you want the alert to stay visible
+                timerProgressBar: true, // Show progress bar
+                onClose: () => {
+                    // Optional callback function when the alert is closed automatically
+                    // You can perform additional actions here if needed
+                }
+            });
+            // Optionally update UI or perform any other action after deletion
+        })
+        .catch(error => {
+            console.error('Error deleting chain data:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to delete chain data.',
+                icon: 'error',
+                background: getBackgroundColor(),
+                customClass: {
+                    content: getBackgroundColor() === '#333' ? 'alert-text-white' : '',
+                    title: getBackgroundColor() === '#333' ? 'red-title' : '' 
+                }
+            });
+        });
+    }, 1000); // Adjust delay time as needed
+}
