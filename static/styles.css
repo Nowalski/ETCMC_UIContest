@@ -424,7 +424,7 @@ h1 {
 }
 
 /* Adjust for tablets and smaller screens */
-@media (max-width: 1224px) {
+@media (max-width: 1252px) {
     .top-right, .username-display {
         position: static;
         width: 100%;

@@ -22,14 +22,14 @@
         <h1>ETCMC Client <span id="version">Version: N/A</span></h1>
 
         <div class="top-right">
-            <!-- Username Display Section -->
-            <div id="username-display" class="username-display">
-                <!-- The username will be dynamically set via JavaScript -->
-                NFT-ID, <span id="user-name">Fetching...</span>
-            </div>
-            
-            <p><strong>ETCPOW Increment (Per Transaction):</strong> <span id="etcpow-increment">Fetching...</span></p>
-            <p><strong>Claim Target Balance:</strong> <span id="claim-target-balance">Fetching...</span></p>
+
+<div id="username-display" class="username-display">
+    <i class="fas fa-user"></i> NFT-ID, <span id="user-name">Fetching...</span>
+</div>
+
+<p><strong><i class="fas fa-coins"></i> ETCPOW Increment (Per Transaction):</strong> <span id="etcpow-increment">Fetching...</span></p>
+<p><strong><i class="fas fa-bullseye"></i> Claim Target Balance:</strong> <span id="claim-target-balance">Fetching...</span></p>
+<p><strong><i class="fas fa-gift"></i> Bonus:</strong> <span id="bonus">Fetching...</span></p>
         </div>
         
         <div class="dropdown">
@@ -41,8 +41,6 @@
                 <button id="change-credentials-btn" class="btn">Change Credentials</button>
                 <!-- Button to hide/show system usage -->
                 <button id="toggle-system-usage-btn" class="btn">Toggle System Usage</button>
-                <!-- Node Boost -->
-                <button id="node-boost-btn" class="btn">NodeBoost</button>
                 <!-- Delete Chain -->
                 <button id="delete-chain-data-btn" class="btn">Delete Chain Data</button>
                 <!-- Logout button -->
@@ -62,10 +60,10 @@
             <p><i class="fas fa-power-off"></i> <span id="pending-reboot">Pending Reboot: Fetching...</span></p>
         </div>
 
-        <button id="open-register-modal" class="btn">Open Registration</button>
-        <button id="last-claim-btn" class="btn">Last Claim</button>
-        <button id="help-btn" class="btn">Help</button>
-        <button id="global-btn" class="btn">Announcement</button>
+        <button id="open-register-modal" class="btn"><i class="fas fa-user-plus"></i> Open Registration</button>
+        <button id="last-claim-btn" class="btn"><i class="fas fa-history"></i> Last Claim</button>
+        <button id="help-btn" class="btn"><i class="fas fa-question-circle"></i> Help</button>
+        <button id="global-btn" class="btn"><i class="fas fa-bullhorn"></i> Announcement</button>
         <h2>Geth Console Output</h2>
         <div>
             <button id="font-size-increase-btn" class="icon-btn"><i class="fas fa-plus"></i></button>
@@ -74,10 +72,10 @@
         
         <textarea id="geth-output" readonly></textarea>
         
-        <button id="start-node-btn" class="btn">Start Node</button>
-        <button id="stop-node-btn" class="btn">Stop Node</button>
-        <button class="btn" id="claim-balance-btn">Claim Balance</button>
-        <h2>Current ETCPOW</h2>
+        <button id="start-node-btn" class="btn"><i class="fas fa-play"></i> Start Node</button>
+        <button id="stop-node-btn" class="btn"><i class="fas fa-stop"></i> Stop Node</button>
+        <button class="btn" id="claim-balance-btn"><i class="fas fa-coins"></i> Claim Balance</button>
+        <h2><i class="fas fa-chart-line"></i> Current ETCPOW</h2>
         <p id="current-balance">Fetching balance...</p>
         <p id="claim-estimated-time">Estimated Time to Claim: Fetching...</p>
     </div>
@@ -101,8 +99,9 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; <script>document.write( new Date().getFullYear() );</script> ETCMC Client. All rights reserved.</p>
+        <p>&copy; <script>document.write(new Date().getFullYear());</script> ETCMC Client. All rights reserved. | <a href="https://pool.etcmc-monitor.org/" target="_blank">ETC Pool</a></p>
     </footer>
+    
 
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
     <script>
@@ -147,20 +146,26 @@ function fetchRegistrationStatus() {
         .catch(error => console.error('Error checking registration status:', error));
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/parameters')
-                .then(response => response.json())
-                .then(data => {
-                    const etcpowIncrement = data.ETCPOW_INCREMENT;
+    fetch('/api/parameters')
+        .then(response => response.json())
+        .then(data => {
+            const etcpowIncrement = data.ETCPOW_INCREMENT;
 
-                    document.getElementById('claim-target-balance').textContent = data.CLAIM_TARGET_BALANCE;
-                    document.getElementById('etcpow-increment').textContent = etcpowIncrement;
+            // Display CLAIM_TARGET_BALANCE and ETCPOW_INCREMENT
+            document.getElementById('claim-target-balance').textContent = data.CLAIM_TARGET_BALANCE;
+            document.getElementById('etcpow-increment').textContent = etcpowIncrement;
 
-                })
-                .catch(error => {
-                    console.error('Error fetching parameters:', error);
-                });
+            // Display Bonus
+            const bonusText = data.Bonus === 'Yes' ? 'Yes' : 'No';
+            document.getElementById('bonus').textContent = ` ${bonusText}`;
+        })
+        .catch(error => {
+            console.error('Error fetching parameters:', error);
         });
+});
+
 fetchRegistrationStatus();
 
 setInterval(fetchRegistrationStatus, 5000);

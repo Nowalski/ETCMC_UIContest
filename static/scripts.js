@@ -538,59 +538,6 @@ helpBtn.addEventListener("click", () => {
     });
 });
 
-document.getElementById('node-boost-btn').addEventListener('click', function() {
-    const backgroundColor = getBackgroundColor();
-    stopNode(backgroundColor);
-    Swal.fire({
-        title: 'Running NodeBoost',
-        text: 'Please wait...',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        background: backgroundColor,
-        customClass: {
-            content: getBackgroundColor() === '#333' ? 'alert-text-white' : '',
-            title: getBackgroundColor() === '#333' ? 'red-title' : '' 
-        },
-        onBeforeOpen: () => {
-            Swal.showLoading();
-            fetch('/run-script', {
-                method: 'POST'
-            }).then(response => response.json()).then(data => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: data.message,
-                    background: backgroundColor,
-                    customClass: {
-                        content: getBackgroundColor() === '#333' ? 'alert-text-white' : '',
-                        title: getBackgroundColor() === '#333' ? 'red-title' : '' 
-                    }
-                });
-
-                setTimeout(() => {
-                    Swal.close();
-                }, 3000);
-            }).catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error occurred while executing the NodeBoost',
-                    background: backgroundColor,
-                    customClass: {
-                        content: getBackgroundColor() === '#333' ? 'alert-text-white' : '',
-                        title: getBackgroundColor() === '#333' ? 'red-title' : '' 
-                    }
-                });
-                console.error('Error:', error);
-                Swal.close();
-            });
-        }
-    });
-});
-
-
-
 
 fetch('/get_version')
 .then(response => response.json())
